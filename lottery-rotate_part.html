@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+      }
+
+      .wrapper {
+        width: 340px;
+        height: 340px;
+        margin: 0 auto;
+        display: flex;
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .rotate-part {
+        width: 100%;
+        height: 100%;
+        background: url(./part-bg.png) no-repeat;
+      }
+
+      .pointer {
+        position: absolute;
+        width: 186px;
+        height: 186px;
+        background: url(./pointer.png) no-repeat;
+      }
+
+      #part {
+        transition: transform 10.5s;
+        transition-timing-function: cubic-bezier(0.42, 0, 0, 0.99); /*调整旋转速度和起始速率*/
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div id="part" class="rotate-part"></div>
+      <div id="pointer" class="pointer"></div>
+    </div>
+
+    <script>
+      (function () {
+        var pointer = document.getElementById('pointer');
+        var part = document.getElementById('part');
+        options = {};
+
+        function getRandom(start, end) {
+          var angle = Math.floor(Math.random() * (end - start + 1) + start);
+          return angle;
+        }
+
+        function _begin() {
+          var baseRotateAngle = 2160; // 默认旋转6圈的角度
+
+          var resultAngle = getRandom(-30, 330); // 最后一圈随机转的角度
+
+          var defaultReward = null; // 内定奖品 '1' - 理财金2000元
+
+          if (defaultReward) {
+            var _defaultRewardAngle = options.gifts[defaultReward];
+            resultAngle = getRandom(
+              _defaultRewardAngle.angleStart,
+              _defaultRewardAngle.angleEnd
+            );
+          }
+
+          var deg = baseRotateAngle + resultAngle;
+
+          part.style.transform = 'rotate(' + deg + 'deg)';
+
+          part.addEventListener('transitionend', function () {
+            for (var key in options.gifts) {
+                if (
+                  options.gifts[key].angleStart <= resultAngle &&
+                  resultAngle <= options.gifts[key].angleEnd
+                ) {
+                  confirm(options.gifts[key].tips);
+                  window.location.reload();
+                }
+              }
+          });
+        }
+
+        // 奖品的角度列表
+        options.gifts = {
+          1: {
+            id: '1',
+            name: '理财金2000元',
+            angleStart: -30,
+            angleEnd: 30,
+            tips: '恭喜您获得理财金2000元~~'
+          },
+          2: {
+            id: '2',
+            name: '谢谢参与',
+            angleStart: 31,
+            angleEnd: 90,
+            tips: '很遗憾没有能中奖，再试一次吧~'
+          },
+          3: {
+            id: '3',
+            name: '理财金5200元',
+            angleStart: 91,
+            angleEnd: 150,
+            tips: '恭喜您获得理财金5200元~~'
+          },
+          4: {
+            id: '4',
+            name: '京东E卡',
+            angleStart: 151,
+            angleEnd: 210,
+            tips: '恭喜您抽中京东E卡一张~'
+          },
+          5: {
+            id: '5',
+            name: '谢谢参与',
+            angleStart: 211,
+            angleEnd: 270,
+            tips: '很遗憾没有能中奖，再试一次吧~'
+          },
+          6: {
+            id: '6',
+            name: '理财金1000元',
+            angleStart: 271,
+            angleEnd: 330,
+            tips: '恭喜您获得理财金1000元~~'
+          }
+        };
+
+        pointer.addEventListener('click', _begin)
+      })();
+    </script>
+  </body>
+</html>
