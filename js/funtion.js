@@ -24,3 +24,5 @@ stop.onclick=function(){
 	var nameSpan=document.getElementsByClassName("select-name")[0];
 	nameSpan.innerText=name;
 }
+
+//test text used
